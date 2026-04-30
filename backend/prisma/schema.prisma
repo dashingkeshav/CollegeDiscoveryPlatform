@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model College {
+  id                 String         @id @default(uuid())
+  name               String
+  location           String
+  fees               Float
+  rating             Float
+  description        String?
+  placementPercentage Float?
+  imageUrl           String?
+  courses            Course[]
+  savedBy            SavedCollege[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model Course {
+  id        String   @id @default(uuid())
+  name      String
+  collegeId String
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  passwordHash  String         @default("")
+  savedColleges SavedCollege[]
+  questions     Question[]
+  answers       Answer[]
+  createdAt     DateTime       @default(now())
+}
+
+
+model SavedCollege {
+  userId    String
+  collegeId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, collegeId])
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  answers   Answer[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  content    String
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
