@@ -250,4 +250,7 @@ app.post('/api/questions/:id/answers', async (req, res) => {
         res.status(500).json({ error: 'Failed to add answer' });
     }
 });
+app.get("/", (req, res) => {
+    res.send("API is running 🚀");
+});
 app.listen(port, () => console.log(`Server running on port ${port}`));
