@@ -253,4 +253,7 @@ app.post('/api/questions/:id/answers', async (req, res) => {
 app.get("/", (req, res) => {
     res.send("API is running 🚀");
 });
+app.get("/", (req, res) => {
+    res.send("API is running 🚀");
+});
 app.listen(port, () => console.log(`Server running on port ${port}`));
